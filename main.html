@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SIES GST RegistrationForm</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: black;  
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    form {
+      background: black;
+      border: 2px solid red;
+      padding: 25px 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px red;
+      width: 380px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: red;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+      color: white;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid red;
+      border-radius: 8px;
+      font-size: 14px;
+      background: black;
+      color: white;
+    }
+    input:focus {
+      border-color: white;
+      outline: none;
+    }
+    .hint {
+      font-size: 11px;
+      color: white;
+      margin-top: 2px;
+      display: none; 
+    }
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button[type="submit"] {
+      background: red;
+      color: white;
+    }
+    button[type="submit"]:hover {
+      background: black;
+      border: 2px solid red;
+      color: red;
+    }
+    button[type="reset"] {
+      background: white;
+      color: black;
+    }
+    button[type="reset"]:hover {
+      background: red;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<form id="myForm">
+  <h2>SIES GST RegistrationForm </h2>
+
+  <label for="name">Name</label>
+  <input type="text" id="name" required>
+  <div class="hint" id="nameHint">Only alphabets are allowed</div>
+  <span class="error" id="nameError"></span>
+
+  <label for="username">Username</label>
+  <input type="text" id="username" required>
+  <div class="hint" id="usernameHint">Use letters and numbers only</div>
+  <span class="error" id="usernameError"></span>
+
+  <label for="email">Email</label>
+  <input type="text" id="email" required>
+  <div class="hint" id="emailHint"> Must contain "@" and valid domain</div>
+  <span class="error" id="emailError"></span>
+
+  <label for="phone">Phone</label>
+  <input type="text" id="phone" required>
+  <div class="hint" id="phoneHint"> Must be exactly 10 digits</div>
+  <span class="error" id="phoneError"></span>
+
+  <label for="password">Password</label>
+  <input type="password" id="password" required>
+  <div class="hint" id="passwordHint"> Min 8 chars, at least 1 special character</div>
+  <span class="error" id="passwordError"></span>
+
+  <div class="buttons">
+    <button type="submit">Submit</button>
+    <button type="reset" id="resetBtn">Reset</button>
+  </div>
+</form>
+
+<script>
+$(document).ready(function(){
+
+  function validateName() {
+    let name = $("#name").val().trim();
+    if(name.length === 0) { $("#nameError").text(""); return false; }
+    if(!/^[A-Za-z ]+$/.test(name)){
+      $("#nameError").text("Only alphabets allowed.");
+      return false;
+    } else { $("#nameError").text(""); return true; }
+  }
+
+  function validateUsername() {
+    let username = $("#username").val().trim();
+    if(username.length === 0) { $("#usernameError").text(""); return false; }
+    if(!/^[A-Za-z0-9]+$/.test(username)){
+      $("#usernameError").text("Letters & numbers only.");
+      return false;
+    } else { $("#usernameError").text(""); return true; }
+  }
+
+  function validateEmail() {
+    let email = $("#email").val().trim();
+    if(email.length === 0) { $("#emailError").text(""); return false; }
+    if(!/^[^ ]+@[^ ]+\.[a-z]{2,3}$/.test(email)){
+      $("#emailError").text("Invalid email format.");
+      return false;
+    } else { $("#emailError").text(""); return true; }
+  }
+
+  function validatePhone() {
+    let phone = $("#phone").val().trim();
+    if(phone.length === 0) { $("#phoneError").text(""); return false; }
+    if(!/^[0-9]{10}$/.test(phone)){
+      $("#phoneError").text("Must be 10 digits.");
+      return false;
+    } else { $("#phoneError").text(""); return true; }
+  }
+
+  function validatePassword() {
+    let password = $("#password").val().trim();
+    if(password.length === 0) { $("#passwordError").text(""); return false; }
+    if(!/^(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$/.test(password)){
+      $("#passwordError").text("Min 8 chars, include 1 special char.");
+      return false;
+    } else { $("#passwordError").text(""); return true; }
+  }
+
+  // Show hint when user types
+  $("#name").on("input", function(){ $("#nameHint").show(); validateName(); });
+  $("#username").on("input", function(){ $("#usernameHint").show(); validateUsername(); });
+  $("#email").on("input", function(){ $("#emailHint").show(); validateEmail(); });
+  $("#phone").on("input", function(){ $("#phoneHint").show(); validatePhone(); });
+  $("#password").on("input", function(){ $("#passwordHint").show(); validatePassword(); });
+
+  // On submit
+  $("#myForm").submit(function(e){
+    e.preventDefault();
+    if(validateName() & validateUsername() & validateEmail() & validatePhone() & validatePassword()){
+      alert("✅ Form submitted successfully!");
+      this.reset();
+      $(".error").text(""); 
+      $(".hint").hide();
+    } else {
+      alert("❌ Please fix the errors before submitting.");
+    }
+  });
+
+  // Reset button clears errors and hides hints
+  $("#resetBtn").click(function(){
+    $(".error").text("");
+    $(".hint").hide();
+  });
+
+});
+</script>
+
+</body>
+</html>
